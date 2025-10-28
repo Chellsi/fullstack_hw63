@@ -1,40 +1,29 @@
 import express from 'express';
 import { 
   basicAuth, 
-  validateUserInput, 
-  checkResourceExists 
+  validateUserInput
 } from '../middlewares/index.js';
+import {
+  getUsersPage,
+  getUsersApi,
+  getUserByIdPage,
+  getUserByIdApi,
+  createUser,
+  updateUser,
+  deleteUser
+} from '../controllers/usersController.js';
 
 const router = express.Router();
 
-// Імітація бази даних користувачів
-const validUserIds = ['123', '456', '789'];
+// HTML маршрути (використовують PUG)
+router.get('/page', getUsersPage);
+router.get('/page/:userId', getUserByIdPage);
 
-// GET /users - отримати всіх користувачів (з автентифікацією)
-router.get('/', basicAuth, (req, res) => {
-  res.status(200).send('Get users route');
-});
-
-// POST /users - створити нового користувача (з автентифікацією та валідацією)
-router.post('/', basicAuth, validateUserInput, (req, res) => {
-  res.status(201).send('Post users route');
-});
-
-// GET /users/:userId - отримати користувача за ID (з автентифікацією)
-router.get('/:userId', basicAuth, checkResourceExists(validUserIds), (req, res) => {
-  const { userId } = req.params;
-  res.status(200).send(`Get user by Id route: ${userId}`);
-});
-
-// PUT /users/:userId - оновити користувача за ID (з автентифікацією та валідацією)
-router.put('/:userId', basicAuth, checkResourceExists(validUserIds), validateUserInput, (req, res) => {
-  const { userId } = req.params;
-  res.status(200).send(`Put user by Id route: ${userId}`);
-});
-
-// DELETE /users/:userId - видалити користувача за ID (з автентифікацією)
-router.delete('/:userId', basicAuth, checkResourceExists(validUserIds), (req, res) => {
-  res.status(204).send();
-});
+// API маршрути (повертають JSON/текст)
+router.get('/', basicAuth, getUsersApi);
+router.post('/', basicAuth, validateUserInput, createUser);
+router.get('/:userId', basicAuth, getUserByIdApi);
+router.put('/:userId', basicAuth, validateUserInput, updateUser);
+router.delete('/:userId', basicAuth, deleteUser);
 
 export default router;

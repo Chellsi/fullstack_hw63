@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  .breadcrumb
+    a(href='/') Головна
+    span.separator /
+    a(href='/users/page') Користувачі
+    span.separator /
+    span.current= user.name
+  
+  .detail-card
+    .detail-header
+      .user-avatar-large
+        span.avatar-text-large= user.name.charAt(0)
+      .user-header-info
+        h1.detail-title= user.name
+        span.user-badge(class=user.role === 'admin' ? 'badge-admin' : 'badge-user')= user.role
+    
+    .detail-body
+      .detail-section
+        h3 Особиста інформація
+        .detail-row
+          .detail-label ID користувача:
+          .detail-value= user.id
+        .detail-row
+          .detail-label Email:
+          .detail-value= user.email
+        .detail-row
+          .detail-label Роль:
+          .detail-value= user.role
+    
+    .detail-actions
+      a.btn.btn-secondary(href='/users/page') ← Назад до списку
+      button.btn.btn-primary Редагувати
+      button.btn.btn-danger Видалити
